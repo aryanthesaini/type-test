@@ -12,6 +12,7 @@ export default function Home() {
   const [correctPresses, setCorrectPresses] = useState(0);
   const [incorrectPresses, setIncorrectPresses] = useState(0);
   const [curWord, setCurWord] = useState('');
+  const [nextWord, setNextWord] = useState('');
   const [accuracy, setAccuracy] = useState(0.0);
   const [pressedKey, setPressedKey] = useState('');
   const [validClass, setValidClass] = useState('text-blue-600');
@@ -41,6 +42,7 @@ export default function Home() {
           }
 
           setCurWord(word[i]);
+          setNextWord(word[i + 1]);
         } else if (curWord.length > 0 && key != checkAlpha) {
           setIncorrectPresses(incorrectPresses + 1);
           setValidClass('text-red-500');
@@ -70,6 +72,7 @@ export default function Home() {
 
     setWord(randomWord);
     setCurWord(randomWord[0]);
+    setNextWord(randomWord[1]);
   }
 
   const options = {
@@ -84,11 +87,10 @@ export default function Home() {
           <h1 className='text-2xl uppercase'>Level {level}</h1>
           <TagCloud
             options={options}
-            className='text-sm uppercase text-gray-500'
+            className='text-sm uppercase text-gray-500 -z-20'
             onClickOptions={{ passive: true }}>
             {word}
           </TagCloud>
-
           <div className='flex items-center justify-center space-x-7'>
             {/* <h1 className='text-5xl font-bold uppercase text-blue-600'>
               {curWord.split('').map((character) => (
@@ -102,6 +104,12 @@ export default function Home() {
               {curWord}
             </h1>
           </div>
+          {nextWord && (
+            <h1 className={`text-[15px] font-thin uppercase text-gray-500 `}>
+              {' '}
+              next - {nextWord}
+            </h1>
+          )}
 
           {/* <div className='flex items-center justify-center space-x-7'>
             <h2>
@@ -111,7 +119,6 @@ export default function Home() {
               </span>
             </h2>
           </div> */}
-
           <div className='flex items-center justify-center space-x-10'>
             <div className='px-10 py-10'>
               <p>Correct keys pressed</p>
@@ -123,7 +130,6 @@ export default function Home() {
               <h1 className=' uppercase text-red-500'>{incorrectPresses}</h1>
             </div>
           </div>
-
           <div className='flex items-center justify-center space-x-7'>
             <p>Accuracy: </p>
 
