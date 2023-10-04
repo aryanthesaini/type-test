@@ -87,7 +87,7 @@ export default function Home() {
           <h1 className='text-2xl uppercase'>Level {level}</h1>
           <TagCloud
             options={options}
-            className='text-sm uppercase text-gray-500 -z-20'
+            className='text-sm uppercase text-gray-600 -z-20'
             onClickOptions={{ passive: true }}>
             {word}
           </TagCloud>
@@ -105,7 +105,7 @@ export default function Home() {
             </h1>
           </div>
           {nextWord && (
-            <h1 className={`text-[15px] font-thin uppercase text-gray-500 `}>
+            <h1 className={`text-[15px] font-thin uppercase text-gray-300 `}>
               {' '}
               next - {nextWord}
             </h1>
@@ -121,11 +121,11 @@ export default function Home() {
           </div> */}
           <div className='flex items-center justify-center space-x-10'>
             <div className='px-10 py-10'>
-              <p>Correct keys pressed</p>
+              <p>Correct</p>
               <h1 className=' uppercase text-green-500'>{correctPresses}</h1>
             </div>
             <div className='px-10 py-10'>
-              <p>Incorrect keys pressed</p>
+              <p>Incorrect</p>
 
               <h1 className=' uppercase text-red-500'>{incorrectPresses}</h1>
             </div>
