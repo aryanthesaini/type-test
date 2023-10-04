@@ -64,7 +64,7 @@ export default function Home() {
   }
 
   const options = {
-    maxSpeed: 'medium',
+    maxSpeed: 'fast',
   };
   return (
     <>
