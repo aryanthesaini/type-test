@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { TagCloud } from '@frank-mayer/react-tag-cloud';
+import Countdown from 'react-countdown';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 let i = 0;
 let level = 1;
 let numberOfWords = 2;
@@ -16,6 +18,9 @@ export default function Home() {
   const [accuracy, setAccuracy] = useState(0.0);
   const [pressedKey, setPressedKey] = useState('');
   const [validClass, setValidClass] = useState('text-blue-600');
+  const [failed, setFailed] = useState(false);
+  const [timerDuration, setTimerDuration] = useState(7);
+  const [key, setKey] = useState(0);
 
   useEffect(() => {
     const keyDownHandler = (e) => {
@@ -31,11 +36,15 @@ export default function Home() {
           word[i] = curWord.slice(1, curWord.length);
           setValidClass('text-green-500');
           if (curWord.length == 1 && key == checkAlpha) {
+            setKey(Math.random());
+            setTimerDuration(7);
+
             i++;
             setValidClass('text-blue-600');
             if (i == numberOfWords) {
               level++;
               numberOfWords += 3;
+              setTimerDuration(10);
               fetchWord();
               i = 0;
             }
@@ -81,18 +90,32 @@ export default function Home() {
 
   return (
     <>
-      {' '}
-      {word && (
-        <div className='h-screen flex flex-col space-y-8 items-center justify-center text-center overflow-hidden'>
-          <h1 className='text-2xl uppercase'>Level {level}</h1>
-          <TagCloud
-            options={options}
-            className='text-sm uppercase text-gray-600 -z-20'
-            onClickOptions={{ passive: true }}>
-            {word}
-          </TagCloud>
-          <div className='flex items-center justify-center space-x-7'>
-            {/* <h1 className='text-5xl font-bold uppercase text-blue-600'>
+      {failed
+        ? 'OOPS'
+        : word && (
+            <div className='h-screen flex flex-col space-y-8 items-center justify-center text-center overflow-hidden'>
+              <h1 className='text-2xl uppercase'>Level {level}</h1>
+
+              <CountdownCircleTimer
+                isPlaying
+                duration={timerDuration}
+                colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+                colorsTime={[7, 5, 2, 0]}
+                key={key}
+                size={80}
+                onComplete={() => {
+                  setFailed(true);
+                }}>
+                {({ remainingTime }) => remainingTime}
+              </CountdownCircleTimer>
+              <TagCloud
+                options={options}
+                className='text-sm uppercase text-gray-600 -z-20'
+                onClickOptions={{ passive: true }}>
+                {word}
+              </TagCloud>
+              <div className='flex items-center justify-center space-x-7'>
+                {/* <h1 className='text-5xl font-bold uppercase text-blue-600'>
               {curWord.split('').map((character) => (
                 <div key={Math.random()} className={`inline ${validClass}`}>
                   {character}
@@ -100,18 +123,18 @@ export default function Home() {
               ))}
             </h1> */}
 
-            <h1 className={`text-5xl font-bold uppercase  ${validClass}`}>
-              {curWord}
-            </h1>
-          </div>
-          {nextWord && (
-            <h1 className={`text-[15px] font-thin uppercase text-gray-300 `}>
-              {' '}
-              next - {nextWord}
-            </h1>
-          )}
-
-          {/* <div className='flex items-center justify-center space-x-7'>
+                <h1 className={`text-5xl font-bold uppercase  ${validClass}`}>
+                  {curWord}
+                </h1>
+              </div>
+              {nextWord && (
+                <h1
+                  className={`text-[15px] font-thin uppercase text-gray-300 `}>
+                  {' '}
+                  next - {nextWord}
+                </h1>
+              )}
+              {/* <div className='flex items-center justify-center space-x-7'>
             <h2>
               You pressed:{' '}
               <span className='text-xl font-semibold uppercase text-blue-400'>
@@ -119,26 +142,30 @@ export default function Home() {
               </span>
             </h2>
           </div> */}
-          <div className='flex items-center justify-center space-x-10'>
-            <div className='px-10 py-10'>
-              <p>Correct</p>
-              <h1 className=' uppercase text-green-500'>{correctPresses}</h1>
-            </div>
-            <div className='px-10 py-10'>
-              <p>Incorrect</p>
+              <div className='flex items-center justify-center space-x-10'>
+                <div className='px-10 py-10'>
+                  <p>Correct</p>
+                  <h1 className=' uppercase text-green-500'>
+                    {correctPresses}
+                  </h1>
+                </div>
+                <div className='px-10 py-10'>
+                  <p>Incorrect</p>
 
-              <h1 className=' uppercase text-red-500'>{incorrectPresses}</h1>
-            </div>
-          </div>
-          <div className='flex items-center justify-center space-x-7'>
-            <p>Accuracy: </p>
+                  <h1 className=' uppercase text-red-500'>
+                    {incorrectPresses}
+                  </h1>
+                </div>
+              </div>
+              <div className='flex items-center justify-center space-x-7'>
+                <p>Accuracy: </p>
 
-            <h1 className='text-2xl uppercase text-gray-300'>
-              {accuracy.toFixed(2)}%
-            </h1>
-          </div>
-        </div>
-      )}
+                <h1 className='text-2xl uppercase text-gray-300'>
+                  {accuracy.toFixed(2)}%
+                </h1>
+              </div>
+            </div>
+          )}
     </>
   );
 }
